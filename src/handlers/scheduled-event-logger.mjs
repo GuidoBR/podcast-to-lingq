@@ -2,7 +2,7 @@
  * A Lambda function that logs the payload received from a CloudWatch scheduled event.
  */
 
-import { FeedParser } from 'feedparser';
+import { feedparser } from 'feedparser';
 import fetch from 'node-fetch';
 
 export const scheduledEventLoggerHandler = async (event, context) => {
@@ -10,7 +10,7 @@ export const scheduledEventLoggerHandler = async (event, context) => {
 
     const podcast_feed_url = "https://innerfrench.com/feed/"
     var req = fetch(podcast_feed_url)
-    var feedparser = new FeedParser();
+    var feed = new FeedParser();
 
     req.then(function (res) {
         if (res.status !== 200) {
@@ -18,17 +18,17 @@ export const scheduledEventLoggerHandler = async (event, context) => {
         }
         else {
           // The response `body` -- res.body -- is a stream
-          res.body.pipe(feedparser);
+          res.body.pipe(feed);
         }
       }, function (err) {
         throw new Error('Error on downloading the feed');
       });
 
-      feedparser.on('error', function (error) {
+      feed.on('error', function (error) {
         throw new Error('Error on feedparser');
       });
 
-      feedparser.on('readable', function () {
+      feed.on('readable', function () {
         // This is where the action is!
         var stream = this; // `this` is `feedparser`, which is a stream
         var meta = this.meta; // **NOTE** the "meta" is always available in the context of the feedparser instance
