@@ -17,6 +17,10 @@ lint = true
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 resolve_s3 = true
+stack_name = "sam-podcast-to-lingq"
+s3_prefix = "sam-podcast-to-lingq"
+region = "us-west-2"
+image_repositories = []
 
 [default.package.parameters]
 resolve_s3 = true
