@@ -1,15 +1,16 @@
 /**
  * A Lambda function that logs the payload received from a CloudWatch scheduled event.
  */
+
+import { FeedParser } from 'feedparser';
+import fetch from 'node-fetch';
+
 export const scheduledEventLoggerHandler = async (event, context) => {
     console.info(JSON.stringify(event));
 
-    var FeedParser = require('feedparser');
-    var fetch = require('node-fetch'); // for fetching the feed
-
     const podcast_feed_url = "https://innerfrench.com/feed/"
     var req = fetch(podcast_feed_url)
-    var feedparser = new FeedParser([options]);
+    var feedparser = new FeedParser();
 
     req.then(function (res) {
         if (res.status !== 200) {
