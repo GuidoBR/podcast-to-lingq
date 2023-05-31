@@ -45,7 +45,7 @@ export const scheduledEventLoggerHandler = async (event, context) => {
   
     feed.items.forEach((item) => {
       let publishedDate = new Date(item.pubDate);
-      if (isToday(pubDate)) {
+      if (isToday(publishedDate)) {
         console.log("Publishing item into LingQ:", item);
 
         axios.post(lingq_api_url, {
