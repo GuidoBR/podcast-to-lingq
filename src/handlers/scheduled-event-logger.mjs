@@ -10,6 +10,13 @@ async function readRssFeed(feedUrl) {
   return await parser.parseURL(feedUrl);
 }
 
+function isToday (date) {  
+  const now = new Date()
+  return date.getDate() === now.getDate() &&
+        date.getMonth() === now.getMonth() &&
+        date.getFullYear() === now.getFullYear()
+}
+
 export const scheduledEventLoggerHandler = async (event, context) => {
     console.info(JSON.stringify(event));
 
@@ -26,13 +33,13 @@ export const scheduledEventLoggerHandler = async (event, context) => {
     }
   
     feed.items.forEach((item) => {
-      console.log(item);
-      feed_titles.push(item.title);
-      feed_links.push(item.link);
+      publishedDate = new Date(item.pubDate);
+      if (isToday(pubDate)) {
+        console.log(item);
+        feed_titles.push(item.title);
+        feed_links.push(item.link);
+      }
     });
 
-    console.log(feed_links);
-    console.log(feed_titles);
-    return feed_links;
-
+    console.log(feed.items);
 }
