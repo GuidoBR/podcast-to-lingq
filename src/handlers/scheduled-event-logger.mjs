@@ -3,11 +3,23 @@
  */
 
 import Parser from 'rss-parser';
+import axios from 'axios';
+
 
 async function readRssFeed(feedUrl) {
   const parser = new Parser();
-
   return await parser.parseURL(feedUrl);
+}
+
+async function makeRequest(url) {
+  const config = {
+      method: 'post',
+      url: url
+  }
+
+  let res = await axios(config)
+
+  console.log(res.status);
 }
 
 function isToday (date) {  
@@ -20,11 +32,10 @@ function isToday (date) {
 export const scheduledEventLoggerHandler = async (event, context) => {
     console.info(JSON.stringify(event));
 
-    const podcast_feed_url = "https://innerfrench.com/feed/"
+    const podcast_feed_url = "https://innerfrench.com/feed/";
+    const lingq_api_url = "https://www.lingq.com/api/v2/fr/lessons/"; // https://www.lingq.com/apidocs/api-2.0.html#lessons
 
     let feed;
-    let feed_links = [];
-    let feed_titles = [];
   
     feed = await readRssFeed(podcast_feed_url);
     if (!feed){
@@ -35,9 +46,22 @@ export const scheduledEventLoggerHandler = async (event, context) => {
     feed.items.forEach((item) => {
       publishedDate = new Date(item.pubDate);
       if (isToday(pubDate)) {
-        console.log(item);
-        feed_titles.push(item.title);
-        feed_links.push(item.link);
+        console.log("Publishing item into LingQ:", item);
+
+        axios.post(lingq_api_url, {
+          title: item.title,
+          status: "private",
+          level: 4, // Intermediate 2
+          original_url: item.link,
+          text: item.description,
+          audio: item.enclosure.url
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
       }
     });
 
