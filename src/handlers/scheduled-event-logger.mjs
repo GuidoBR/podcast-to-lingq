@@ -44,7 +44,7 @@ export const scheduledEventLoggerHandler = async (event, context) => {
     }
   
     feed.items.forEach((item) => {
-      publishedDate = new Date(item.pubDate);
+      let publishedDate = new Date(item.pubDate);
       if (isToday(pubDate)) {
         console.log("Publishing item into LingQ:", item);
 
