@@ -17,6 +17,7 @@ export const scheduledEventLoggerHandler = async (event, context) => {
 
     let feed;
     let feed_links = [];
+    let feed_titles = [];
   
     feed = await readRssFeed(podcast_feed_url);
     if (!feed){
@@ -31,6 +32,7 @@ export const scheduledEventLoggerHandler = async (event, context) => {
     });
 
     console.log(feed_links);
+    console.log(feed_titles);
     return feed_links;
 
 }
