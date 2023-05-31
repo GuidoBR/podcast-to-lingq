@@ -11,17 +11,6 @@ async function readRssFeed(feedUrl) {
   return await parser.parseURL(feedUrl);
 }
 
-async function makeRequest(url) {
-  const config = {
-      method: 'post',
-      url: url
-  }
-
-  let res = await axios(config)
-
-  console.log(res.status);
-}
-
 function isToday (date) {  
   const now = new Date()
   return date.getDate() === now.getDate() &&
